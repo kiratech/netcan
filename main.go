@@ -16,8 +16,9 @@ import (
 const default_netns_path = "/proc/1/ns/net"
 
 type VethPair struct {
-	HostInterface  net.Interface
-	GuestInterface net.Interface
+	HostInterface   net.Interface
+	GuestInterface  net.Interface
+	BridgeInterface net.Interface
 }
 
 type NamespacePaths struct {
@@ -113,7 +114,7 @@ func groupPairs(interfaces []net.Interface, links []netlink.Link) []VethPair {
 
 	pairs := []VethPair{}
 	for _, link := range links {
-		//masterIdx := link.Attrs().MasterIndex
+		masterIdx := link.Attrs().MasterIndex
 		parentIdx := link.Attrs().ParentIndex
 		Idx := link.Attrs().Index
 
@@ -127,10 +128,12 @@ func groupPairs(interfaces []net.Interface, links []netlink.Link) []VethPair {
 
 		hostInterface := mapifaces[Idx]
 		parentInterface := mapifaces[parentIdx]
+		bridgeInterface := mapifaces[masterIdx]
 
 		pairs = append(pairs, VethPair{
-			HostInterface:  hostInterface,
-			GuestInterface: parentInterface,
+			HostInterface:   hostInterface,
+			GuestInterface:  parentInterface,
+			BridgeInterface: bridgeInterface,
 		})
 	}
 	return pairs
