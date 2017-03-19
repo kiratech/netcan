@@ -109,9 +109,12 @@ func CreateHostFromPid(pid string) (*Host, error) {
 				if i.Index != Idx {
 					continue
 				}
-				//TODO: check if the index is not found (e.g: can happen with vxlans)
-				i.Pair = flatIfaces[parentIdx]
-				i.Bridges = append(i.Bridges, flatIfaces[masterIdx])
+				if pairIf, ok := flatIfaces[parentIdx]; ok {
+					i.Pair = pairIf
+				}
+				if brif, ok := flatIfaces[masterIdx]; ok {
+					i.Bridges = append(i.Bridges, brif)
+				}
 			}
 		}
 

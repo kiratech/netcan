@@ -3,6 +3,7 @@ package main
 import (
 	"github.com/Sirupsen/logrus"
 	"github.com/fntlnz/netcan/network"
+	"github.com/fntlnz/netcan/util"
 )
 
 func main() {
@@ -10,5 +11,5 @@ func main() {
 	if err != nil {
 		logrus.Fatal(err)
 	}
-	logrus.Info(host)
+	util.PrintHost(host)
 }
