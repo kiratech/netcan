@@ -3,9 +3,6 @@ package network
 import (
 	"fmt"
 	"net"
-
-	"github.com/fntlnz/netcan/proc"
-	"github.com/vishvananda/netlink"
 )
 
 type Namespace struct {
@@ -57,54 +54,36 @@ func flattenInterfaces(ifaces []*Interface) map[int]*Interface {
 }
 
 func CreateHostFromPid(pid string) (*Host, error) {
-	// Initialize everything
 	netns := fmt.Sprintf("/proc/%s/ns/net", pid)
 	mountinfo := fmt.Sprintf("/proc/%s/mountinfo", pid)
+	return CreateHostFromPaths(netns, mountinfo)
+}
 
-	interfaces := []*Interface{}
-	hosts := []*Host{}
-	links := []netlink.Link{}
+func CreateHostFromPaths(netns string, mountinfo string) (*Host, error) {
+	netnsNetworkInfo, err := AggregateNetnsNetworkInfo(netns, mountinfo)
 
-	// Determine and append root infos
-	rootIfaces, rootLinks, err := ExtractNetnsIfacesAndLinks(netns)
-
-	if err != nil {
-		return nil, fmt.Errorf("Error extracting network namespace and links from netns: %s => %s", netns, err)
-	}
-	rootHost := createHostFromRawIfaces(netns, rootIfaces)
-	hosts = append(hosts, rootHost)
-	links = append(links, rootLinks...)
-	interfaces = append(interfaces, rootHost.Interfaces...)
-
-	// Determine the sandboxes from mountinfo
-	sandboxes, err := proc.GetMountInfo(mountinfo)
 	if err != nil {
 		return nil, err
 	}
 
-	// Extract info from all the sandboxes
-	for _, c := range sandboxes {
-		if c.FilesystemType != "nsfs" {
-			continue
-		}
-		ifaces, curlinks, err := ExtractNetnsIfacesAndLinks(c.MountPoint)
-		if err != nil {
-			continue
-		}
-		curHost := createHostFromRawIfaces(c.MountPoint, ifaces)
-		hosts = append(hosts, curHost)
-		links = append(links, curlinks...)
-		interfaces = append(interfaces, curHost.Interfaces...)
+	return CreateHostFromNetnsNetworkInfo(netnsNetworkInfo)
+}
+
+func CreateHostFromNetnsNetworkInfo(netnsNetworkInfo *NetnsNetInfo) (*Host, error) {
+
+	if len(netnsNetworkInfo.Hosts) < 1 {
+		return nil, fmt.Errorf("Not able to create an host given the provided paths")
 	}
 
 	// Create associations
-	flatIfaces := flattenInterfaces(interfaces)
-	for _, l := range links {
+	flatIfaces := flattenInterfaces(netnsNetworkInfo.Interfaces)
+
+	for _, l := range netnsNetworkInfo.Links {
 		masterIdx := l.Attrs().MasterIndex
 		parentIdx := l.Attrs().ParentIndex
 		Idx := l.Attrs().Index
 
-		for _, h := range hosts {
+		for _, h := range netnsNetworkInfo.Hosts {
 			for _, i := range h.Interfaces {
 				if i.Index != Idx {
 					continue
@@ -117,8 +96,7 @@ func CreateHostFromPid(pid string) (*Host, error) {
 				}
 			}
 		}
-
 	}
 
-	return rootHost, nil
+	return netnsNetworkInfo.Hosts[0], nil
 }

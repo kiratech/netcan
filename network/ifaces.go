@@ -8,7 +8,7 @@ import (
 	"github.com/vishvananda/netns"
 )
 
-func ExtractNetnsIfacesAndLinks(netnsfd string) ([]net.Interface, []netlink.Link, error) {
+func extractNetnsIfacesAndLinks(netnsfd string) ([]net.Interface, []netlink.Link, error) {
 	ns, err := netns.GetFromPath(netnsfd)
 
 	if err != nil {
