@@ -1,4 +1,4 @@
-.PHONY: build tools-image
+.PHONY: build tools-image integration
 
 TOOLS_IMAGE_FQDN=docker.io/fntlnz/netcan-tools:latest
 PROJECT_DIR=$(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
@@ -18,3 +18,6 @@ build: tools-image
 
 tools-image:
 	docker build -t $(TOOLS_IMAGE_FQDN) -f Dockerfile .
+
+integration:
+	ginkgo -v -r --randomizeAllSpecs --randomizeSuites --trace
