@@ -1,0 +1,19 @@
+{
+    "dependencies": {
+        "github.com/Sirupsen/logrus": {
+            "branch": "master"
+        },
+        "github.com/onsi/ginkgo": {
+            "branch": "master"
+        },
+        "github.com/onsi/gomega": {
+            "branch": "master"
+        },
+        "github.com/vishvananda/netlink": {
+            "branch": "master"
+        },
+        "github.com/vishvananda/netns": {
+            "branch": "master"
+        }
+    }
+}
