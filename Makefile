@@ -12,7 +12,6 @@ ifeq ($(NOCONTAINER), 1)
 	CURDIR=$(PROJECT_DIR)/
 endif
 
-
 build: tools-image
 	$(BUILDCONTAINER) sh -c "CGO_ENABLED=0 GOOS=linux go build -ldflags $(LDFLAGS) ."
 

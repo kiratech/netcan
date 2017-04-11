@@ -1,15 +1,24 @@
 package main
 
 import (
+	"net/http"
+	"os"
+	"time"
+
 	"github.com/Sirupsen/logrus"
-	"github.com/fntlnz/netcan/network"
-	"github.com/fntlnz/netcan/util"
+	"github.com/fntlnz/netcan/ws"
+	"github.com/gorilla/handlers"
 )
 
 func main() {
-	host, err := network.CreateHostFromPid("1")
-	if err != nil {
-		logrus.Fatal(err)
+	loggedRouter := handlers.LoggingHandler(os.Stdout, ws.NewRouter())
+
+	srv := &http.Server{
+		Handler:      loggedRouter,
+		Addr:         "127.0.0.1:8000",
+		WriteTimeout: 15 * time.Second,
+		ReadTimeout:  15 * time.Second,
 	}
-	util.PrintHost(host)
+
+	logrus.Fatal(srv.ListenAndServe())
 }

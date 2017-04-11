@@ -1,0 +1,21 @@
+{
+  "name": "ui",
+  "homepage": "https://github.com/fntlnz/netcan",
+  "authors": [
+    "Lorenzo Fontana <lo@linux.com>"
+  ],
+  "description": "",
+  "main": "",
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "cytoscape": "^2.7.16",
+    "axios": "^0.16.1"
+  }
+}

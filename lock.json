@@ -1,5 +1,5 @@
 {
-    "memo": "",
+    "memo": "4870cf26d42bc16e5c62e99050e02e4069d464df04504a57f4cf25d1a93e0dd4",
     "projects": [
         {
             "name": "github.com/Sirupsen/logrus",
@@ -10,11 +10,59 @@
             ]
         },
         {
+            "name": "github.com/gorilla/context",
+            "version": "v1.1",
+            "revision": "1ea25387ff6f684839d82767c1733ff4d4d15d0a",
+            "packages": [
+                "."
+            ]
+        },
+        {
+            "name": "github.com/gorilla/handlers",
+            "version": "v1.2",
+            "revision": "3a5767ca75ece5f7f1440b1d16975247f8d8b221",
+            "packages": [
+                "."
+            ]
+        },
+        {
+            "name": "github.com/gorilla/mux",
+            "version": "v1.3.0",
+            "revision": "392c28fe23e1c45ddba891b0320b3b5df220beea",
+            "packages": [
+                "."
+            ]
+        },
+        {
+            "name": "github.com/gorilla/websocket",
+            "version": "v1.1.0",
+            "revision": "3ab3a8b8831546bd18fd182c20687ca853b2bb13",
+            "packages": [
+                "."
+            ]
+        },
+        {
             "name": "github.com/onsi/ginkgo",
             "branch": "master",
             "revision": "bb93381d543b0e5725244abe752214a110791d01",
             "packages": [
-                "."
+                ".",
+                "config",
+                "internal/codelocation",
+                "internal/containernode",
+                "internal/failer",
+                "internal/leafnodes",
+                "internal/remote",
+                "internal/spec",
+                "internal/specrunner",
+                "internal/suite",
+                "internal/testingtproxy",
+                "internal/writer",
+                "reporters",
+                "reporters/stenographer",
+                "reporters/stenographer/support/go-colorable",
+                "reporters/stenographer/support/go-isatty",
+                "types"
             ]
         },
         {
@@ -22,7 +70,20 @@
             "branch": "master",
             "revision": "4ac488ac94a6dfbd2f7e01cc3bea24e2efc40663",
             "packages": [
-                "."
+                ".",
+                "format",
+                "gbytes",
+                "gexec",
+                "internal/assertion",
+                "internal/asyncassertion",
+                "internal/oraclematcher",
+                "internal/testingtsupport",
+                "matchers",
+                "matchers/support/goraph/bipartitegraph",
+                "matchers/support/goraph/edge",
+                "matchers/support/goraph/node",
+                "matchers/support/goraph/util",
+                "types"
             ]
         },
         {
@@ -30,7 +91,8 @@
             "branch": "master",
             "revision": "fe3b5664d23a11b52ba59bece4ff29c52772a56b",
             "packages": [
-                "."
+                ".",
+                "nl"
             ]
         },
         {
