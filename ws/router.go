@@ -1,11 +1,14 @@
 package ws
 
 import (
+	"encoding/json"
 	"net/http"
-	"github.com/gorilla/mux"
+	"time"
+
 	"github.com/Sirupsen/logrus"
-	"github.com/gorilla/websocket"
 	"github.com/fntlnz/netcan/network"
+	"github.com/gorilla/mux"
+	"github.com/gorilla/websocket"
 	"fmt"
 )
 
@@ -26,23 +29,91 @@ func serveWs(hub *Hub, w http.ResponseWriter, r *http.Request) {
 	client.readPump()
 }
 
+func appendHost(nodes []csnode, edges []csedge, host *network.Host) ([]csnode, []csedge) {
+	for _, i := range host.Interfaces {
+		nodes = append(nodes, csnode{
+			csdata{
+				Id: i.Name,
+			},
+		})
+
+		if i.Pair != nil {
+			nodes, edges = appendInterface(nodes, edges, i.Pair)
+		}
+		for _, b := range i.Bridges {
+			nodes, edges = appendInterface(nodes, edges, b)
+			edges = append(edges, csedge{
+				csdata{
+					Id: fmt.Sprintf("%s-%s", i.Name, b.Name),
+					Source: fmt.Sprintf("%s", i.Name),
+					Target: fmt.Sprintf("%s", b.Name),
+					Weight: 1,
+				},
+			})
+		}
+	}
+
+	return nodes, edges
+}
+
+func appendInterface(nodes []csnode, edges []csedge, i *network.Interface) ([]csnode, []csedge) {
+	nodes = append(nodes, csnode{
+		csdata{
+			Id: i.Name,
+		},
+	})
+
+	if i.Pair != nil {
+		edges = append(edges, csedge{
+			csdata{
+				Id: fmt.Sprintf("%s-%s", i.Name, i.Pair.Name),
+				Source: fmt.Sprintf("%s", i.Name),
+				Target: fmt.Sprintf("%s", i.Pair.Name),
+				Weight: 1,
+			},
+		})
+	}
+
+	return nodes, edges
+
+}
+func wsHandler(hub *Hub) func(w http.ResponseWriter, r *http.Request) {
+	return func(w http.ResponseWriter, r *http.Request) {
+		serveWs(hub, w, r)
+		go func() {
+			for {
+				time.Sleep(2 * time.Second)
+				host, err := network.CreateHostFromPid("1")
+				if err != nil {
+					logrus.Fatal(err)
+				}
+				cy := cytoscape{}
+				nodes := []csnode{}
+				edges := []csedge{}
+
+				nodes, edges = appendHost(nodes, edges, host);
+
+				cy.Elements = cselements{
+					Nodes: nodes,
+					Edges: edges,
+				}
+
+				j, err := json.Marshal(cy)
+				if err != nil {
+					logrus.Error(err)
+					continue
+				}
+				hub.broadcast <- j
+			}
+		}()
+	}
+}
+
 func NewRouter() *mux.Router {
 	hub := newHub()
 	go hub.run()
 	r := mux.NewRouter()
-	r.HandleFunc("/ws", func(w http.ResponseWriter, r *http.Request) {
-		serveWs(hub, w, r)
-	})
+	r.HandleFunc("/ws", wsHandler(hub))
 	r.Handle("/", r)
-
-	go func () {
-		for {
-			host, err := network.CreateHostFromPid("1")
-			if err != nil {
-				logrus.Fatal(err)
-			}
-			hub.broadcast <- []byte(fmt.Sprintf("%s", host.Namespace))
-		}
-	}()
 	return r
 }

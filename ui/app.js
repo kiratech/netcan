@@ -1,9 +1,9 @@
-var plotGraph = function() {
-    var cy = cytoscape({
+var createGraph = function(elements) {
+    return cytoscape({
         container: document.getElementById('cy'),
 
         boxSelectionEnabled: false,
-        autounselectify: true,
+        autounselectify: false,
 
         style: cytoscape.stylesheet()
             .selector('node')
@@ -27,25 +27,7 @@ var plotGraph = function() {
                 'transition-duration': '0.5s'
             }),
 
-        elements: {
-            nodes: [
-                {data: {id: 'a'}},
-                {data: {id: 'b'}},
-                {data: {id: 'c'}},
-                {data: {id: 'd'}},
-                {data: {id: 'e'}}
-            ],
-            edges: [
-                {data: {id: 'ae', weight: 1, source: 'a', target: 'e'}},
-                {data: {id: 'ab', weight: 3, source: 'a', target: 'b'}},
-                {data: {id: 'be', weight: 4, source: 'b', target: 'e'}},
-                {data: {id: 'bc', weight: 5, source: 'b', target: 'c'}},
-                {data: {id: 'ce', weight: 6, source: 'c', target: 'e'}},
-                {data: {id: 'cd', weight: 2, source: 'c', target: 'd'}},
-                {data: {id: 'de', weight: 7, source: 'd', target: 'e'}}
-            ]
-        },
-
+        elements: elements,
         layout: {
             name: 'breadthfirst',
             directed: true,
@@ -53,26 +35,17 @@ var plotGraph = function() {
             padding: 10
         }
     });
+};
 
-    var bfs = cy.elements().bfs('#a', function () {
-    }, true);
 
-    var i = 0;
-    var highlightNextEle = function () {
-        if (i < bfs.path.length) {
-            bfs.path[i].addClass('highlighted');
-            i++;
-            setTimeout(highlightNextEle, 1000);
-        }
+var main = function() {
+    var ws = new WebSocket("ws://127.0.0.1:8000/ws");
+    ws.onmessage = function (evt) {
+        console.log(evt.data);
+        var result = JSON.parse(evt.data);
+        createGraph(result.elements);
     };
-
-    highlightNextEle();
 };
 
-// window.onload = plotGraph;
+window.onload = main;
 
-var ws = new WebSocket("ws://127.0.0.1:8000/ws");
-ws.onmessage = function (evt)  {
-    var received_msg = evt.data;
-    console.log(received_msg);2
-};
