@@ -40,6 +40,7 @@ func appendHost(nodes []csnode, edges []csedge, host *network.Host) ([]csnode, [
 			Id: host.Namespace.Fd,
 		},
 	})
+
 	for _, i := range host.Interfaces {
 		nodes = append(nodes, csnode{
 			csdata{
@@ -51,6 +52,7 @@ func appendHost(nodes []csnode, edges []csedge, host *network.Host) ([]csnode, [
 		if i.Pair != nil {
 			nodes, edges = appendInterface(nodes, edges, i.Pair)
 		}
+
 		for _, b := range i.Bridges {
 			nodes = append(nodes, csnode{
 				csdata{
