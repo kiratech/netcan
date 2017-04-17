@@ -5,6 +5,8 @@ type csdata struct {
 	Weight int `json:"weight"`
 	Source string `json:"source"`
 	Target string `json:"target"`
+	FaveShape string `json:"faveShape"`
+	Label string `json:"label"`
 }
 
 type csedge struct {

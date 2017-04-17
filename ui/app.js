@@ -31,7 +31,6 @@ var createGraph = function(elements) {
         layout: {
             name: 'breadthfirst',
             directed: true,
-            roots: '#a',
             padding: 10
         }
     });
@@ -41,7 +40,6 @@ var createGraph = function(elements) {
 var main = function() {
     var ws = new WebSocket("ws://127.0.0.1:8000/ws");
     ws.onmessage = function (evt) {
-        console.log(evt.data);
         var result = JSON.parse(evt.data);
         createGraph(result.elements);
     };
