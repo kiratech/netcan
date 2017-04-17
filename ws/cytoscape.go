@@ -6,7 +6,7 @@ type csdata struct {
 	Source string `json:"source"`
 	Target string `json:"target"`
 	FaveShape string `json:"faveShape"`
-	Label string `json:"label"`
+	Parent string `json:"parent"`
 }
 
 type csedge struct {

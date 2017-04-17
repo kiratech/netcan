@@ -72,7 +72,7 @@ func CreateHostFromPaths(netns string, mountinfo string) (*Host, error) {
 func CreateHostFromNetnsNetworkInfo(netnsNetworkInfo *NetnsNetInfo) (*Host, error) {
 
 	if len(netnsNetworkInfo.Hosts) < 1 {
-		return nil, fmt.Errorf("Not able to create an host given the provided paths")
+		return nil, fmt.Errorf("Unable to create an host given the provided paths")
 	}
 
 	// Create associations

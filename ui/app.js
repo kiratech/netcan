@@ -41,6 +41,7 @@ var main = function() {
     var ws = new WebSocket("ws://127.0.0.1:8000/ws");
     ws.onmessage = function (evt) {
         var result = JSON.parse(evt.data);
+        //TODO: find a better way to update than recreating the graph
         createGraph(result.elements);
     };
 };

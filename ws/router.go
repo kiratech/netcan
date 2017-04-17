@@ -33,10 +33,17 @@ func serveWs(hub *Hub, w http.ResponseWriter, r *http.Request) {
 }
 
 func appendHost(nodes []csnode, edges []csedge, host *network.Host) ([]csnode, []csedge) {
+	// The parent host node
+	nodes = append(nodes, csnode{
+		csdata{
+			Id: host.Namespace.Fd,
+		},
+	})
 	for _, i := range host.Interfaces {
 		nodes = append(nodes, csnode{
 			csdata{
 				Id: i.Name,
+				Parent: i.Host.Namespace.Fd,
 			},
 		})
 
@@ -47,6 +54,7 @@ func appendHost(nodes []csnode, edges []csedge, host *network.Host) ([]csnode, [
 			nodes = append(nodes, csnode{
 				csdata{
 					Id: i.Name,
+					Parent: i.Host.Namespace.Fd,
 				},
 			})
 			edges = append(edges, csedge{
@@ -65,9 +73,17 @@ func appendHost(nodes []csnode, edges []csedge, host *network.Host) ([]csnode, [
 }
 
 func appendInterface(nodes []csnode, edges []csedge, i *network.Interface) ([]csnode, []csedge) {
+	// The parent node for this host
+	nodes = append(nodes, csnode{
+		csdata{
+			Id: i.Host.Namespace.Fd,
+		},
+	})
+
 	nodes = append(nodes, csnode{
 		csdata{
 			Id: i.Name,
+			Parent: i.Host.Namespace.Fd,
 		},
 	})
 
@@ -91,6 +107,7 @@ func wsHandler(hub *Hub) func(w http.ResponseWriter, r *http.Request) {
 		go func() {
 			var prevHash hash.Hash;
 			for {
+				// TODO(fntlnz): worth waiting?
 				time.Sleep(2 * time.Second)
 				host, err := network.CreateHostFromPid("1")
 				if err != nil {
