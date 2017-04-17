@@ -1,4 +1,4 @@
-var createGraph = function(elements) {
+var createGraph = function (elements) {
     return cytoscape({
         container: document.getElementById('cy'),
 
@@ -37,8 +37,10 @@ var createGraph = function(elements) {
 };
 
 
-var main = function() {
-    var ws = new WebSocket("ws://127.0.0.1:8000/ws");
+var main = function () {
+    const httpBaseUrl = window.location.origin
+    const websocketBaseUrl = "ws://" + httpBaseUrl.replace(/.*?:\/\//g, "");
+    var ws = new WebSocket(websocketBaseUrl + "/ws");
     ws.onmessage = function (evt) {
         var result = JSON.parse(evt.data);
         //TODO: find a better way to update than recreating the graph
