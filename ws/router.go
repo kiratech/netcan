@@ -149,6 +149,7 @@ func NewRouter() *mux.Router {
 	go hub.run()
 	r := mux.NewRouter()
 	r.HandleFunc("/ws", wsHandler(hub))
-	r.Handle("/", r)
+	r.PathPrefix("/").Handler(http.StripPrefix("/", http.FileServer(http.Dir("ui/"))))
+
 	return r
 }
