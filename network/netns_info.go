@@ -13,7 +13,7 @@ type NetnsNetInfo struct {
 	Links      []netlink.Link
 }
 
-func AggregateNetnsNetworkInfo(netnsFd string, mountinfoFd string) (*NetnsNetInfo, error) {
+func AggregateNetnsNetworkInfo(netnsFd string, mountinfoFd string, rootfs string) (*NetnsNetInfo, error) {
 	interfaces := []*Interface{}
 	hosts := []*Host{}
 	links := []netlink.Link{}
@@ -40,11 +40,11 @@ func AggregateNetnsNetworkInfo(netnsFd string, mountinfoFd string) (*NetnsNetInf
 		if c.FilesystemType != "nsfs" {
 			continue
 		}
-		ifaces, curlinks, err := extractNetnsIfacesAndLinks(c.MountPoint)
+		ifaces, curlinks, err := extractNetnsIfacesAndLinks(fmt.Sprintf("%s/%s", rootfs, c.MountPoint))
 		if err != nil {
 			continue
 		}
-		curHost := createHostFromRawIfaces(c.MountPoint, ifaces)
+		curHost := createHostFromRawIfaces(fmt.Sprintf("%s/%s", rootfs, c.MountPoint), ifaces)
 		hosts = append(hosts, curHost)
 		links = append(links, curlinks...)
 		interfaces = append(interfaces, curHost.Interfaces...)

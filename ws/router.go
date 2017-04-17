@@ -5,14 +5,15 @@ import (
 	"net/http"
 	"time"
 
+	"crypto/sha1"
+	"encoding/hex"
+	"fmt"
+	"hash"
+
 	"github.com/Sirupsen/logrus"
 	"github.com/fntlnz/netcan/network"
 	"github.com/gorilla/mux"
 	"github.com/gorilla/websocket"
-	"fmt"
-	"crypto/sha1"
-	"hash"
-	"encoding/hex"
 )
 
 func serveWs(hub *Hub, w http.ResponseWriter, r *http.Request) {
@@ -42,7 +43,7 @@ func appendHost(nodes []csnode, edges []csedge, host *network.Host) ([]csnode, [
 	for _, i := range host.Interfaces {
 		nodes = append(nodes, csnode{
 			csdata{
-				Id: i.Name,
+				Id:     i.Name,
 				Parent: i.Host.Namespace.Fd,
 			},
 		})
@@ -53,17 +54,17 @@ func appendHost(nodes []csnode, edges []csedge, host *network.Host) ([]csnode, [
 		for _, b := range i.Bridges {
 			nodes = append(nodes, csnode{
 				csdata{
-					Id: i.Name,
+					Id:     i.Name,
 					Parent: i.Host.Namespace.Fd,
 				},
 			})
 			edges = append(edges, csedge{
 				csdata{
-					Id: fmt.Sprintf("%s-%s", i.Name, b.Name),
-					Source: fmt.Sprintf("%s", i.Name),
-					Target: fmt.Sprintf("%s", b.Name),
+					Id:        fmt.Sprintf("%s-%s", i.Name, b.Name),
+					Source:    fmt.Sprintf("%s", i.Name),
+					Target:    fmt.Sprintf("%s", b.Name),
 					FaveShape: "triangle",
-					Weight: 1,
+					Weight:    1,
 				},
 			})
 		}
@@ -82,7 +83,7 @@ func appendInterface(nodes []csnode, edges []csedge, i *network.Interface) ([]cs
 
 	nodes = append(nodes, csnode{
 		csdata{
-			Id: i.Name,
+			Id:     i.Name,
 			Parent: i.Host.Namespace.Fd,
 		},
 	})
@@ -90,7 +91,7 @@ func appendInterface(nodes []csnode, edges []csedge, i *network.Interface) ([]cs
 	if i.Pair != nil {
 		edges = append(edges, csedge{
 			csdata{
-				Id: fmt.Sprintf("%s-%s", i.Name, i.Pair.Name),
+				Id:     fmt.Sprintf("%s-%s", i.Name, i.Pair.Name),
 				Source: fmt.Sprintf("%s", i.Name),
 				Target: fmt.Sprintf("%s", i.Pair.Name),
 				Weight: 1,
@@ -101,15 +102,16 @@ func appendInterface(nodes []csnode, edges []csedge, i *network.Interface) ([]cs
 	return nodes, edges
 
 }
-func wsHandler(hub *Hub) func(w http.ResponseWriter, r *http.Request) {
+
+func wsHandler(hub *Hub, rootfs string) func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		serveWs(hub, w, r)
 		go func() {
-			var prevHash hash.Hash;
+			var prevHash hash.Hash
 			for {
 				// TODO(fntlnz): worth waiting?
 				time.Sleep(2 * time.Second)
-				host, err := network.CreateHostFromPid("1")
+				host, err := network.CreateHostFromPid("1", rootfs)
 				if err != nil {
 					logrus.Fatal(err)
 				}
@@ -117,7 +119,7 @@ func wsHandler(hub *Hub) func(w http.ResponseWriter, r *http.Request) {
 				nodes := []csnode{}
 				edges := []csedge{}
 
-				nodes, edges = appendHost(nodes, edges, host);
+				nodes, edges = appendHost(nodes, edges, host)
 
 				cy.Elements = cselements{
 					Nodes: nodes,
@@ -130,11 +132,10 @@ func wsHandler(hub *Hub) func(w http.ResponseWriter, r *http.Request) {
 					continue
 				}
 
-
 				curHash := sha1.New()
 				curHash.Write(j)
 
-				if prevHash != nil && hex.EncodeToString(curHash.Sum(nil)) == hex.EncodeToString(prevHash.Sum(nil))  {
+				if prevHash != nil && hex.EncodeToString(curHash.Sum(nil)) == hex.EncodeToString(prevHash.Sum(nil)) {
 					continue
 				}
 				hub.broadcast <- j
@@ -144,11 +145,11 @@ func wsHandler(hub *Hub) func(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func NewRouter() *mux.Router {
+func NewRouter(rootfs string) *mux.Router {
 	hub := newHub()
 	go hub.run()
 	r := mux.NewRouter()
-	r.HandleFunc("/ws", wsHandler(hub))
+	r.HandleFunc("/ws", wsHandler(hub, rootfs))
 	r.PathPrefix("/").Handler(http.StripPrefix("/", http.FileServer(http.Dir("ui/"))))
 
 	return r

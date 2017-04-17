@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"net/http"
 	"os"
 	"time"
@@ -10,8 +11,12 @@ import (
 	"github.com/gorilla/handlers"
 )
 
+var rootfsVar string
+
 func main() {
-	loggedRouter := handlers.LoggingHandler(os.Stdout, ws.NewRouter())
+	flag.StringVar(&rootfsVar, "rootfs", "", "Specify a rootfs where to get network information")
+	flag.Parse()
+	loggedRouter := handlers.LoggingHandler(os.Stdout, ws.NewRouter(rootfsVar))
 
 	srv := &http.Server{
 		Handler:      loggedRouter,

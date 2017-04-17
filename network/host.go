@@ -53,14 +53,14 @@ func flattenInterfaces(ifaces []*Interface) map[int]*Interface {
 	return interfaces
 }
 
-func CreateHostFromPid(pid string) (*Host, error) {
-	netns := fmt.Sprintf("/proc/%s/ns/net", pid)
-	mountinfo := fmt.Sprintf("/proc/%s/mountinfo", pid)
-	return CreateHostFromPaths(netns, mountinfo)
+func CreateHostFromPid(pid string, rootfs string) (*Host, error) {
+	netns := fmt.Sprintf("%s/proc/%s/ns/net", rootfs, pid)
+	mountinfo := fmt.Sprintf("%s/proc/%s/mountinfo", rootfs, pid)
+	return CreateHostFromPaths(netns, mountinfo, rootfs)
 }
 
-func CreateHostFromPaths(netns string, mountinfo string) (*Host, error) {
-	netnsNetworkInfo, err := AggregateNetnsNetworkInfo(netns, mountinfo)
+func CreateHostFromPaths(netns string, mountinfo string, rootfs string) (*Host, error) {
+	netnsNetworkInfo, err := AggregateNetnsNetworkInfo(netns, mountinfo, rootfs)
 
 	if err != nil {
 		return nil, err
