@@ -1,0 +1,80 @@
+{
+  "elements": {
+    "nodes": [
+      {
+        "data": {
+          "id": "lo",
+          "weight": 0,
+          "source": "",
+          "target": ""
+        }
+      },
+      {
+        "data": {
+          "id": "enp0s31f6",
+          "weight": 0,
+          "source": "",
+          "target": ""
+        }
+      },
+      {
+        "data": {
+          "id": "wlp4s0",
+          "weight": 0,
+          "source": "",
+          "target": ""
+        }
+      },
+      {
+        "data": {
+          "id": "virbr0",
+          "weight": 0,
+          "source": "",
+          "target": ""
+        }
+      },
+      {
+        "data": {
+          "id": "virbr0-nic",
+          "weight": 0,
+          "source": "",
+          "target": ""
+        }
+      },
+      {
+        "data": {
+          "id": "docker0",
+          "weight": 0,
+          "source": "",
+          "target": ""
+        }
+      },
+      {
+        "data": {
+          "id": "wwp0s20f0u2i12",
+          "weight": 0,
+          "source": "",
+          "target": ""
+        }
+      },
+      {
+        "data": {
+          "id": "vethbf29077",
+          "weight": 0,
+          "source": "",
+          "target": ""
+        }
+      }
+    ],
+    "edges": [
+      {
+        "data": {
+          "id": "14-13",
+          "weight": 1,
+          "source": "14",
+          "target": "13"
+        }
+      }
+    ]
+  }
+}

@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/fntlnz/netcan/network"
+	"github.com/kiratech/netcan/network"
 )
 
 func PrintIface(i *network.Interface, ind int) {

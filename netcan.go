@@ -1,15 +1,29 @@
 package main
 
 import (
-	"github.com/Sirupsen/logrus"
-	"github.com/fntlnz/netcan/network"
-	"github.com/fntlnz/netcan/util"
+	"flag"
+	"net/http"
+	"os"
+	"time"
+
+	"github.com/gorilla/handlers"
+	"github.com/kiratech/netcan/ws"
+	"github.com/sirupsen/logrus"
 )
 
+var rootfsVar string
+
 func main() {
-	host, err := network.CreateHostFromPid("1")
-	if err != nil {
-		logrus.Fatal(err)
+	flag.StringVar(&rootfsVar, "rootfs", "", "Specify a rootfs where to get network information")
+	flag.Parse()
+	loggedRouter := handlers.LoggingHandler(os.Stdout, ws.NewRouter(rootfsVar))
+
+	srv := &http.Server{
+		Handler:      loggedRouter,
+		Addr:         "0.0.0.0:8000",
+		WriteTimeout: 15 * time.Second,
+		ReadTimeout:  15 * time.Second,
 	}
-	util.PrintHost(host)
+
+	logrus.Fatal(srv.ListenAndServe())
 }

@@ -13,7 +13,7 @@ type ParseMountData struct {
 // TestParseMountString data set, please add more cases if you feel
 func ParseMountDataset() []ParseMountData {
 	return []ParseMountData{
-		ParseMountData{
+		{
 			rawline: "515 24 0:3 net:[4026533140] /run/docker/netns/f46c0b2da189 rw shared:188 - nsfs nsfs rw",
 			expectedset: Mountinfo{
 				MountId:        "515",
@@ -28,7 +28,7 @@ func ParseMountDataset() []ParseMountData {
 				SuperOptions:   "rw",
 			},
 		},
-		ParseMountData{
+		{
 			rawline: "26 25 0:24 / /sys/fs/cgroup/systemd rw,nosuid,nodev,noexec,relatime shared:9 - cgroup cgroup rw,xattr,release_agent=/usr/lib/systemd/systemd-cgroups-agent,name=systemd",
 			expectedset: Mountinfo{
 				MountId:        "26",
