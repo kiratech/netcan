@@ -1,4 +1,6 @@
-# Net Can
+# Network Container Analyzer (NetCAn)
+
+![img/example.png](img/example.png)
 
 ## Run in a Docker container
 
