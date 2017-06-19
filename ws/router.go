@@ -3,6 +3,7 @@ package ws
 import (
 	"encoding/json"
 	"net/http"
+	"strings"
 	"time"
 
 	"crypto/sha1"
@@ -15,6 +16,8 @@ import (
 	"github.com/gorilla/websocket"
 	"github.com/sirupsen/logrus"
 )
+
+const separator = "<->"
 
 func serveWs(hub *Hub, w http.ResponseWriter, r *http.Request) {
 	var upgrader = websocket.Upgrader{
@@ -33,6 +36,34 @@ func serveWs(hub *Hub, w http.ResponseWriter, r *http.Request) {
 	client.readPump()
 }
 
+func checkIfEdgeExists(edges []csedge, edgeID string) bool {
+	for _, ed := range edges {
+		if ed.Data.Id == edgeID {
+			return true
+		}
+		splitted := strings.Split(edgeID, separator)
+
+		if len(splitted) < 2 {
+			continue
+		}
+		reverse := formatPair(splitted[1], splitted[0])
+
+		if ed.Data.Id == reverse {
+			return true
+		}
+
+	}
+	return false
+}
+
+func formatInterface(i network.Interface) string {
+	return fmt.Sprintf("%d:%s", i.Index, i.Name)
+}
+
+func formatPair(left, right string) string {
+	return fmt.Sprintf("%s%s%s", left, separator, right)
+}
+
 func appendHost(nodes []csnode, edges []csedge, host *network.Host) ([]csnode, []csedge) {
 	// The parent host node
 	nodes = append(nodes, csnode{
@@ -42,9 +73,10 @@ func appendHost(nodes []csnode, edges []csedge, host *network.Host) ([]csnode, [
 	})
 
 	for _, i := range host.Interfaces {
+		interfaceStr := formatInterface(*i)
 		nodes = append(nodes, csnode{
 			csdata{
-				Id:     i.Name,
+				Id:     interfaceStr,
 				Parent: i.Host.Namespace.Fd,
 			},
 		})
@@ -56,15 +88,22 @@ func appendHost(nodes []csnode, edges []csedge, host *network.Host) ([]csnode, [
 		for _, b := range i.Bridges {
 			nodes = append(nodes, csnode{
 				csdata{
-					Id:     i.Name,
+					Id:     interfaceStr,
 					Parent: i.Host.Namespace.Fd,
 				},
 			})
+
+			curID := formatPair(interfaceStr, formatInterface(*b))
+
+			if checkIfEdgeExists(edges, curID) {
+				logrus.Infof("happn: %s", curID)
+				continue
+			}
 			edges = append(edges, csedge{
 				csdata{
-					Id:        fmt.Sprintf("%s-%s", i.Name, b.Name),
-					Source:    fmt.Sprintf("%s", i.Name),
-					Target:    fmt.Sprintf("%s", b.Name),
+					Id:        curID,
+					Source:    formatInterface(*i),
+					Target:    formatInterface(*b),
 					FaveShape: "triangle",
 					Weight:    1,
 				},
@@ -85,20 +124,24 @@ func appendInterface(nodes []csnode, edges []csedge, i *network.Interface) ([]cs
 
 	nodes = append(nodes, csnode{
 		csdata{
-			Id:     i.Name,
+			Id:     formatInterface(*i),
 			Parent: i.Host.Namespace.Fd,
 		},
 	})
 
 	if i.Pair != nil {
-		edges = append(edges, csedge{
-			csdata{
-				Id:     fmt.Sprintf("%s-%s", i.Name, i.Pair.Name),
-				Source: fmt.Sprintf("%s", i.Name),
-				Target: fmt.Sprintf("%s", i.Pair.Name),
-				Weight: 1,
-			},
-		})
+		curID := formatPair(formatInterface(*i), formatInterface(*i.Pair))
+		if !checkIfEdgeExists(edges, curID) {
+			logrus.Infof("happn: %s", curID)
+			edges = append(edges, csedge{
+				csdata{
+					Id:     curID,
+					Source: formatInterface(*i),
+					Target: formatInterface(*i.Pair),
+					Weight: 1,
+				},
+			})
+		}
 	}
 
 	return nodes, edges

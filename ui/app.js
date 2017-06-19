@@ -7,6 +7,9 @@ var createGraph = function (elements) {
 
         style: cytoscape.stylesheet()
             .selector('node')
+            //.style({
+                //'background-color': '#000000'
+            //})
             .css({
                 'content': 'data(id)'
             })
