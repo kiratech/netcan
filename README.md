@@ -5,5 +5,5 @@
 ## Run in a Docker container
 
 ```
-docker run --privileged --net=host -v /:/rootfs:ro fntlnz/netcan -rootfs=/rootfs
+docker run --privileged --net=host -v /:/rootfs:ro kiratech/netcan -rootfs=/rootfs
 ```

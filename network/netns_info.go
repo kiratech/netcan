@@ -3,7 +3,7 @@ package network
 import (
 	"fmt"
 
-	"github.com/fntlnz/netcan/proc"
+	"github.com/kiratech/netcan/proc"
 	"github.com/vishvananda/netlink"
 )
 

@@ -11,9 +11,9 @@ import (
 	"fmt"
 	"hash"
 
-	"github.com/fntlnz/netcan/network"
 	"github.com/gorilla/mux"
 	"github.com/gorilla/websocket"
+	"github.com/kiratech/netcan/network"
 	"github.com/sirupsen/logrus"
 )
 
