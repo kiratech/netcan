@@ -96,16 +96,15 @@ func appendHost(nodes []csnode, edges []csedge, host *network.Host) ([]csnode, [
 			curID := formatPair(interfaceStr, formatInterface(*b))
 
 			if checkIfEdgeExists(edges, curID) {
-				logrus.Infof("happn: %s", curID)
 				continue
 			}
 			edges = append(edges, csedge{
 				csdata{
-					Id:        curID,
-					Source:    formatInterface(*i),
-					Target:    formatInterface(*b),
-					FaveShape: "triangle",
-					Weight:    1,
+					Id:     curID,
+					Source: formatInterface(*i),
+					Target: formatInterface(*b),
+					Style:  map[string]string{"line-color": "red"},
+					Weight: 1,
 				},
 			})
 		}
@@ -125,6 +124,7 @@ func appendInterface(nodes []csnode, edges []csedge, i *network.Interface) ([]cs
 	nodes = append(nodes, csnode{
 		csdata{
 			Id:     formatInterface(*i),
+			Style:  map[string]string{"background-color": "lightsalmon"},
 			Parent: i.Host.Namespace.Fd,
 		},
 	})
@@ -132,7 +132,6 @@ func appendInterface(nodes []csnode, edges []csedge, i *network.Interface) ([]cs
 	if i.Pair != nil {
 		curID := formatPair(formatInterface(*i), formatInterface(*i.Pair))
 		if !checkIfEdgeExists(edges, curID) {
-			logrus.Infof("happn: %s", curID)
 			edges = append(edges, csedge{
 				csdata{
 					Id:     curID,

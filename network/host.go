@@ -61,7 +61,6 @@ func CreateHostFromPid(pid string, rootfs string) (*Host, error) {
 
 func CreateHostFromPaths(netns string, mountinfo string, rootfs string) (*Host, error) {
 	netnsNetworkInfo, err := AggregateNetnsNetworkInfo(netns, mountinfo, rootfs)
-
 	if err != nil {
 		return nil, err
 	}

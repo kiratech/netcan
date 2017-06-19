@@ -7,9 +7,6 @@ var createGraph = function (elements) {
 
         style: cytoscape.stylesheet()
             .selector('node')
-            //.style({
-                //'background-color': '#000000'
-            //})
             .css({
                 'content': 'data(id)'
             })
@@ -32,7 +29,7 @@ var createGraph = function (elements) {
 
         elements: elements,
         layout: {
-            name: 'breadthfirst',
+            name: 'cose-bilkent',
             directed: true,
             padding: 10
         }
@@ -46,8 +43,11 @@ var main = function () {
     var ws = new WebSocket(websocketBaseUrl + "/ws");
     ws.onmessage = function (evt) {
         var result = JSON.parse(evt.data);
-        //TODO: find a better way to update than recreating the graph
-        createGraph(result.elements);
+        var graph = createGraph(result.elements);
+        graph.elements().forEach(function(ele, i, eles) {
+          console.log(ele.data()['style'])
+          ele.style(ele.data()['style'])
+        })
     };
 };
 
