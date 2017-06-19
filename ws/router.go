@@ -10,10 +10,10 @@ import (
 	"fmt"
 	"hash"
 
-	"github.com/Sirupsen/logrus"
 	"github.com/fntlnz/netcan/network"
 	"github.com/gorilla/mux"
 	"github.com/gorilla/websocket"
+	"github.com/sirupsen/logrus"
 )
 
 func serveWs(hub *Hub, w http.ResponseWriter, r *http.Request) {

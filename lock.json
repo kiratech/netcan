@@ -1,89 +1,44 @@
 {
-    "memo": "4870cf26d42bc16e5c62e99050e02e4069d464df04504a57f4cf25d1a93e0dd4",
+    "memo": "7392088d26d3ceefa5951c51a027d4014e2edfadd6149d22ac9ec3d6d826fcc8",
     "projects": [
-        {
-            "name": "github.com/Sirupsen/logrus",
-            "branch": "master",
-            "revision": "3f603f494d61c73457fb234161d8982b9f0f0b71",
-            "packages": [
-                "."
-            ]
-        },
         {
             "name": "github.com/gorilla/context",
             "version": "v1.1",
-            "revision": "1ea25387ff6f684839d82767c1733ff4d4d15d0a",
+            "revision": "a85d2e53ba63bdea074dbbbb5983f0516974e87b",
             "packages": [
                 "."
             ]
         },
         {
             "name": "github.com/gorilla/handlers",
-            "version": "v1.2",
-            "revision": "3a5767ca75ece5f7f1440b1d16975247f8d8b221",
+            "version": "v1.2.1",
+            "revision": "a4043c62cc2329bacda331d33fc908ab11ef0ec3",
             "packages": [
                 "."
             ]
         },
         {
             "name": "github.com/gorilla/mux",
-            "version": "v1.3.0",
-            "revision": "392c28fe23e1c45ddba891b0320b3b5df220beea",
+            "branch": "master",
+            "revision": "599cba5e7b6137d46ddf58fb1765f5d928e69604",
             "packages": [
                 "."
             ]
         },
         {
             "name": "github.com/gorilla/websocket",
-            "version": "v1.1.0",
-            "revision": "3ab3a8b8831546bd18fd182c20687ca853b2bb13",
+            "branch": "master",
+            "revision": "17634340a83afe0cab595e40fbc63f6ffa1d8915",
             "packages": [
                 "."
             ]
         },
         {
-            "name": "github.com/onsi/ginkgo",
-            "branch": "master",
-            "revision": "bb93381d543b0e5725244abe752214a110791d01",
+            "name": "github.com/sirupsen/logrus",
+            "version": "v1.0.0",
+            "revision": "202f25545ea4cf9b191ff7f846df5d87c9382c2b",
             "packages": [
-                ".",
-                "config",
-                "internal/codelocation",
-                "internal/containernode",
-                "internal/failer",
-                "internal/leafnodes",
-                "internal/remote",
-                "internal/spec",
-                "internal/specrunner",
-                "internal/suite",
-                "internal/testingtproxy",
-                "internal/writer",
-                "reporters",
-                "reporters/stenographer",
-                "reporters/stenographer/support/go-colorable",
-                "reporters/stenographer/support/go-isatty",
-                "types"
-            ]
-        },
-        {
-            "name": "github.com/onsi/gomega",
-            "branch": "master",
-            "revision": "4ac488ac94a6dfbd2f7e01cc3bea24e2efc40663",
-            "packages": [
-                ".",
-                "format",
-                "gbytes",
-                "gexec",
-                "internal/assertion",
-                "internal/asyncassertion",
-                "internal/oraclematcher",
-                "internal/testingtsupport",
-                "matchers",
-                "matchers/support/goraph/bipartitegraph",
-                "matchers/support/goraph/edge",
-                "matchers/support/goraph/node",
-                "matchers/support/goraph/util",
-                "types"
+                "."
             ]
         },
         {
@@ -106,17 +61,9 @@
         {
             "name": "golang.org/x/sys",
             "branch": "master",
-            "revision": "d75a52659825e75fff6158388dddc6a5b04f9ba5",
+            "revision": "f3918c30c5c2cb527c0b071a27c35120a6c0719a",
             "packages": [
                 "unix"
-            ]
-        },
-        {
-            "name": "gopkg.in/yaml.v2",
-            "branch": "v2",
-            "revision": "4c78c975fe7c825c6d1466c42be594d1d6f3aba6",
-            "packages": [
-                "."
             ]
         }
     ]

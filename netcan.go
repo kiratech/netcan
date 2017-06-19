@@ -6,9 +6,9 @@ import (
 	"os"
 	"time"
 
-	"github.com/Sirupsen/logrus"
 	"github.com/fntlnz/netcan/ws"
 	"github.com/gorilla/handlers"
+	"github.com/sirupsen/logrus"
 )
 
 var rootfsVar string

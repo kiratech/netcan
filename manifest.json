@@ -1,12 +1,9 @@
 {
     "dependencies": {
-        "github.com/Sirupsen/logrus": {
+        "github.com/gorilla/mux": {
             "branch": "master"
         },
-        "github.com/onsi/ginkgo": {
-            "branch": "master"
-        },
-        "github.com/onsi/gomega": {
+        "github.com/gorilla/websocket": {
             "branch": "master"
         },
         "github.com/vishvananda/netlink": {

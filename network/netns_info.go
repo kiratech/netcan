@@ -24,6 +24,7 @@ func AggregateNetnsNetworkInfo(netnsFd string, mountinfoFd string, rootfs string
 	if err != nil {
 		return nil, fmt.Errorf("Error extracting network namespace and links from netns: %s => %s", netnsFd, err)
 	}
+
 	rootHost := createHostFromRawIfaces(netnsFd, rootIfaces)
 	hosts = append(hosts, rootHost)
 	links = append(links, rootLinks...)

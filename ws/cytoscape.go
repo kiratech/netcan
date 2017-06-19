@@ -1,12 +1,12 @@
 package ws
 
 type csdata struct {
-	Id     string `json:"id"`
-	Weight int `json:"weight"`
-	Source string `json:"source"`
-	Target string `json:"target"`
+	Id        string `json:"id"`
+	Weight    int    `json:"weight"`
+	Source    string `json:"source"`
+	Target    string `json:"target"`
 	FaveShape string `json:"faveShape"`
-	Parent string `json:"parent"`
+	Parent    string `json:"parent"`
 }
 
 type csedge struct {
