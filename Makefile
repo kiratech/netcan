@@ -6,7 +6,7 @@ CURDIR=
 DEVIMAGEOPTS=-v $(PROJECT_DIR):/go/src/github.com/kiratech/netcan -w /go/src/github.com/kiratech/netcan $(TOOLS_IMAGE_FQDN):latest
 BUILDCONTAINER=docker run --rm $(DEVIMAGEOPTS)
 LDFLAGS='-extldflags "-static"'
-TESTABLE_PACKAGES=./network ./proc
+TESTABLE_PACKAGES=./network ./pkg/mountinfo
 
 ifeq ($(NOCONTAINER), 1)
 	BUILDCONTAINER=

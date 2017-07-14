@@ -1,4 +1,4 @@
-package proc
+package mountinfo
 
 import (
 	"reflect"

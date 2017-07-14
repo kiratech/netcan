@@ -3,7 +3,7 @@ package network
 import (
 	"fmt"
 
-	"github.com/kiratech/netcan/proc"
+	"github.com/kiratech/netcan/pkg/mountinfo"
 	"github.com/vishvananda/netlink"
 )
 
@@ -31,7 +31,7 @@ func AggregateNetnsNetworkInfo(netnsFd string, mountinfoFd string, rootfs string
 	interfaces = append(interfaces, rootHost.Interfaces...)
 
 	// Determine the sandboxes from mountinfo
-	sandboxes, err := proc.GetMountInfo(mountinfoFd)
+	sandboxes, err := mountinfo.GetMountInfo(mountinfoFd)
 	if err != nil {
 		return nil, err
 	}
